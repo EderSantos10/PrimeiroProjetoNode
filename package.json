@@ -1,0 +1,25 @@
+{
+  "name": "primeiro_projeto",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/EderSantos10/PrimeiroProjetoNode.git"
+  },
+  "author": "Eder Vinicius",
+  "license": "(MIT)",
+  "bugs": {
+    "url": "https://github.com/EderSantos10/PrimeiroProjetoNode/issues"
+  },
+  "homepage": "https://github.com/EderSantos10/PrimeiroProjetoNode#readme",
+  "type": "module",
+  "dependencies": {
+    "ansi-colors": "^4.1.3",
+    "inquirer": "^9.2.23"
+  }
+}
