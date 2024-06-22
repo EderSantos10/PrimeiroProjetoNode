@@ -22,9 +22,9 @@ function operation(){
         if(action === 'Criar Conta'){
             createAccount()
         } else if(action === 'Depositar') {
-            
+            deposit()
         } else if(action === 'Consultar Saldo') {
-
+            getAccountBalance()
         } else if(action === 'Sacar') {
 
         } else if(action === 'Sair') {
@@ -37,7 +37,7 @@ function operation(){
 // creat an account
 function createAccount() {
     console.log(ansi.bgGreen.black('Parabéns por escolher o nosso banco!'))
-    console.log(ansi.green('Defina as condições de sua conta a seguir'))
+    console.log(ansi.green('Defina as opções para sua conta a seguir'))
 
     buildAccount()
 }
@@ -151,4 +151,28 @@ function getAccount(accountName) {
         flag: 'r'
     })
     return JSON.parse(accountJSON)
+}
+
+// show account balance
+function getAccountBalance() {
+    inquirer.prompt([
+        {
+            name: 'accountName',
+            message: 'Qual o nome da sua conta?'
+        }
+    ])
+    .then((answer) => {
+        const accountName = answer['accountName']
+
+        // verify if account exists
+        if (!checkAccount(accountName)) {
+            return getAccountBalance()
+        }
+
+        const accountData = getAccount(accountName)
+
+        console.log(ansi.bgBlue.black(`Olá, o saldo de sua conta é de ${accountData.balance}`), )
+        operation()
+    })
+    .catch(err => console.log(err))
 }
