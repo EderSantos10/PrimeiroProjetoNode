@@ -26,7 +26,7 @@ function operation(){
         } else if(action === 'Consultar Saldo') {
             getAccountBalance()
         } else if(action === 'Sacar') {
-
+            withdrawn()
         } else if(action === 'Sair') {
             console.log(ansi.bgBlue.black('Obrigado por usar nosso banco!'))
             process.exit()
@@ -171,8 +171,66 @@ function getAccountBalance() {
 
         const accountData = getAccount(accountName)
 
-        console.log(ansi.bgBlue.black(`Olá, o saldo de sua conta é de ${accountData.balance}`), )
+        console.log(ansi.bgBlue.black(`Olá, o saldo de sua conta é de R$${accountData.balance}`), )
         operation()
     })
     .catch(err => console.log(err))
+}
+
+// withdrawn an amount from user account
+function withdrawn() {
+
+    inquirer.prompt([
+        {
+            name: 'accountName',
+            message: 'Qual o nome da sua conta?'
+        }
+    ])
+    .then((answer) => {
+        const accountName = answer['accountName']
+
+        if(!checkAccount(accountName)) {
+            return withdrawn()
+        }
+
+        inquirer.prompt([
+            {
+                name: 'amount',
+                Message: 'Qual valor deseja sacar?'
+            }
+        ])
+        .then((answer) => {
+            const amount = answer['amount']
+
+            removeAmount(accountName, amount)
+        })
+        .catch(err => console.log(err))
+    })
+    .catch(err => console.log(err))
+}
+
+function removeAmount(accountName, amount) {
+    const accountData = getAccount(accountName)
+
+    if(!amount) {
+        console.log(ansi.bgRed.black('Ocorreu um erro, tente novamente mais tarde!'),)
+        return withdrawn()
+    }
+
+    if(accountData.balance < amount) {
+        console.log(ansi.bgRed.black('Valor indisponível!'),)
+        return withdrawn()
+    }
+
+    accountData.balance = parseFloat(accountData.balance) - parseFloat(amount)
+
+    fs.writeFileSync(
+        `accounts/${accountName}.json`,
+        JSON.stringify(accountData),
+        function (err) {
+            console.log(err)
+        },
+    )
+    console.log(ansi.green(`Foi realizado um saque de R$${amount} da sua conta!`))
+    operation()
 }
